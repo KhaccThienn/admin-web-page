@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { useSelector } from "react-redux";
+import { selectUserData } from "./redux/reducers/user";
+import { Route, Routes } from "react-router-dom";
+import Error404 from "./components/pages/Error404";
+import { clientRoutes, unloginRoutes } from "./routes/AppRoutes";
 
-function App() {
+const App = () => {
+  const userData = useSelector(selectUserData);
+  console.log("~ App.js userData:", userData);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Routes>
+      {
+        !userData.user.id && unloginRoutes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))
+      }
+      {
+        userData.user.id && clientRoutes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))
+      }
+      <Route path="*" element={<Error404 />} />
+    </Routes>
+  )
 }
 
 export default App;
