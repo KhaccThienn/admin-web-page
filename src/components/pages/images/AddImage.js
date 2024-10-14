@@ -78,7 +78,7 @@ const AddImage = () => {
                 if (err) {
                     Swal.fire({
                         position: 'top-end',
-                        icon: 'success',
+                        icon: 'error',
                         title: 'Upload Failed',
                         titleText: err,
                         showConfirmButton: false,
