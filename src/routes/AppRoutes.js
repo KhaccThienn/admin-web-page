@@ -15,6 +15,7 @@ import AddGenre from "../components/pages/genre/AddGenre";
 import ListGenre from "../components/pages/genre/ListGenre";
 import UpdateGenre from "../components/pages/genre/UpdateGenre";
 import HomePage from "../components/pages/home/HomePage";
+import AddImage from "../components/pages/images/AddImage";
 import ListChapterImage from "../components/pages/images/ListChapterImage";
 import UpdateImage from "../components/pages/images/UpdateImage";
 import LoginPage from "../components/pages/LoginPage";
@@ -130,6 +131,10 @@ export const clientRoutes = [
     {
         path: "/images/:episodeId",
         element: <UserMasterLayout child={<ListChapterImage />} />
+    },
+    {
+        path: "/images/add/:episodeId",
+        element: <UserMasterLayout child={<AddImage />} />
     },
     {
         path: "/images/edit/:id",
