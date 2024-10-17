@@ -19,6 +19,8 @@ import AddImage from "../components/pages/images/AddImage";
 import ListChapterImage from "../components/pages/images/ListChapterImage";
 import UpdateImage from "../components/pages/images/UpdateImage";
 import LoginPage from "../components/pages/LoginPage";
+import ListReview from "../components/pages/reviews/ListReview";
+import ListReviewComic from "../components/pages/reviews/ListReviewComic";
 import AddUser from "../components/pages/user/AddUser";
 import ListUser from "../components/pages/user/ListUser";
 import UpdateUser from "../components/pages/user/UpdateUser";
@@ -111,6 +113,7 @@ export const clientRoutes = [
         element: <UserMasterLayout child={<UpdateComic />} />
     },
 
+    // Episode routes
     {
         path: "/episode",
         element: <UserMasterLayout child={<ShowListComic />} />
@@ -128,6 +131,7 @@ export const clientRoutes = [
         element: <UserMasterLayout child={<UpdateEpisode />} />
     },
 
+    // Chapter images routes
     {
         path: "/images/:episodeId",
         element: <UserMasterLayout child={<ListChapterImage />} />
@@ -140,4 +144,14 @@ export const clientRoutes = [
         path: "/images/edit/:id",
         element: <UserMasterLayout child={<UpdateImage />} />
     },
+
+    // Comic Routes
+    {
+        path: "/listComic",
+        element: <UserMasterLayout child={<ListReviewComic />} />
+    },
+    {
+        path: "review/list/:comicId",
+        element: <UserMasterLayout child={<ListReview />} />
+    }
 ]
