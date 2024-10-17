@@ -97,7 +97,7 @@ function ListDirector() {
                                     return (
                                         <tr key={i}>
                                             <td>{e.id}</td>
-                                            <td className='w-25'>
+                                            <td style={{ width: "10%" }}>
                                                 <img className='card-img' src={e.avatar} alt={e.name} />
                                             </td>
                                             <td>{e.name}</td>

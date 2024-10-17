@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import * as Service from "../../../services/EpisodeService"
 
-function ShowListComic() {
+function ListReviewComic() {
     const [comics, setComics] = useState([]);
 
     const fetchDataAPI = async () => {
@@ -44,6 +44,7 @@ function ShowListComic() {
             </div>
 
             <section className="content">
+                <div className="container-fluid">
                     <div className="d-flex justify-content-between mb-3">
                         <Link to={"/comic/add"} className="btn btn-primary">Add Comic</Link>
                         <form className="d-flex">
@@ -61,7 +62,7 @@ function ShowListComic() {
                                             <div className="card mb-3 card-body">
                                                 <div className="row align-items-center">
                                                     <div className="col-md-1 col-1">
-                                                        <Link to={`/episode/list/${e.comic?.id}`}>
+                                                        <Link to={`/episode/list/${e.comic.id}`}>
                                                             <img src={e.comic.poster} style={{ width: "90px" }} className="rounded-3" alt="" />
                                                         </Link>
                                                     </div>
@@ -71,12 +72,12 @@ function ShowListComic() {
                                                                 <Link to={`/episode/list/${e.comic.id}`} href="#!" className="text-reset">{e.comic.title}</Link>
                                                             </h6>
                                                             <span className="text-muted d-block mb-2 small">
-                                                                Latest Episode: {e.lastEpisode?.id} - {e.lastEpisode?.title}
+                                                                Latest Episode: {e.lastEpisode.id} - {e.lastEpisode.title}
                                                             </span>
                                                         </div>
                                                     </div>
                                                     <div className="col-md-1">
-                                                        <Link to={`/episode/list/${e.comic.id}`} className="btn btn-primary stretched-link">View List Episodes</Link>
+                                                        <Link to={`/review/list/${e.comic.id}`} className="btn btn-primary stretched-link">View List Review</Link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -86,9 +87,10 @@ function ShowListComic() {
                             }
                         </div>
                     </div>
+                </div>
             </section>
         </>
     );
 }
 
-export default ShowListComic;
+export default ListReviewComic;

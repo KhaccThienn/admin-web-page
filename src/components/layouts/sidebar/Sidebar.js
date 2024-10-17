@@ -152,6 +152,24 @@ function Sidebar() {
                             <Link href="#" className="nav-link active">
                                 <i className="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
+                                    Comic's Review
+                                    <i className="right fas fa-angle-left"></i>
+                                </p>
+                            </Link>
+                            <ul className="nav nav-treeview">
+                                <li className="nav-item">
+                                    <Link to={"/listComic"} className="nav-link active">
+                                        <i className="far fa-circle nav-icon"></i>
+                                        <p>Manage</p>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li className="nav-item menu-open">
+                            <Link href="#" className="nav-link active">
+                                <i className="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
                                     Episodes
                                     <i className="right fas fa-angle-left"></i>
                                 </p>
@@ -206,13 +224,6 @@ function Sidebar() {
                                         <p>View List</p>
                                     </Link>
                                 </li>
-                                <li className="nav-item">
-                                    <Link href="" className="nav-link">
-                                        <i className="far fa-circle nav-icon"></i>
-                                        <p>Add</p>
-                                    </Link>
-                                </li>
-
                             </ul>
                         </li>
 
@@ -232,7 +243,6 @@ function Sidebar() {
                                 </p>
                             </Link>
                         </li>
-
                     </ul>
                 </nav>
             </div>
