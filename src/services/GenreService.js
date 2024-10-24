@@ -12,6 +12,25 @@ export const getGenres = async () => {
     }
 };
 
+export const search = async (query) => {
+    try {
+        const response = await axios.get(`${URLAPI}/api/Genre/search/${query}`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
+export const getGenresByPaginate = async (page = 1, pageSize = 1) => {
+    try {
+        const response = await axios.get(`${URLAPI}/api/Genre/by-paginate?page=${page}&pageSize=${pageSize}`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
+
 export const getGenreById = async (id) => {
     try {
         const response = await axios.get(`${URLAPI}/api/Genre/${id}`);

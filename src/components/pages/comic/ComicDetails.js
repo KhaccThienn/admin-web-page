@@ -4,8 +4,8 @@ import * as Service from "../../../services/ComicService"
 
 function ComicDetails() {
     const { id } = useParams();
-    const [comic, setComic] = useState({});
 
+    const [comic, setComic] = useState({});
     const [genres, setGenres] = useState([])
     const [actors, setActors] = useState([])
     const [directors, setDirectors] = useState([])

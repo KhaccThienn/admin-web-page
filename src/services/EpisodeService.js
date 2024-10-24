@@ -11,6 +11,15 @@ export const getAllComic = async () => {
     }
 };
 
+export const search = async (query) => {
+    try {
+        const response = await http.get(`${URLAPI}/api/Comic/search/${query}`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
 export const getById = async (id) => {
     try {
         const response = await http.get(`${URLAPI}/api/Episode/${id}`);

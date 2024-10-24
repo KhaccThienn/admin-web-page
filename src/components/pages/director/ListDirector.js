@@ -1,16 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import * as Service from "../../../services/DirectorService"
+import * as Service from "../../../services/DirectorService";
 import Swal from 'sweetalert2';
+import { API_URL } from '../../../common/constant';
+
 function ListDirector() {
-    const [data, setData] = React.useState([]);
-    const [query, setQuery] = React.useState('');
-    const fetchDataAPI = async () => {
+    const [data, setData] = useState([]);
+    const [query, setQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const pageSize = 2; // Define the page size
+
+    const fetchDataAPI = async (page = 1) => {
         try {
-            const [result, error] = await Service.getAll();
+            const [result, error] = await Service.getAllByPaginate(page, pageSize);
             if (result) {
-                console.log(result);
-                setData(result.data);
+                setData(result.data.data);
+                setTotalPages(result.data.totalPages); // Get total pages from the API
             }
             if (error) {
                 console.log(error);
@@ -20,39 +26,57 @@ function ListDirector() {
         }
     };
 
+    const handleSearch = async () => {
+        if (query.trim() !== '') {
+            try {
+                const [result, error] = await Service.search(query);
+                if (result) {
+                    setData(result.data); // Set the search results
+                    setTotalPages(1); // Since search typically returns one page of results
+                }
+                if (error) {
+                    Swal.fire("Error!", "Failed to search actors", "error");
+                }
+            } catch (error) {
+                Swal.fire("Error!", "An unexpected error occurred", "error");
+            }
+        } else {
+            fetchDataAPI(currentPage); // If query is empty, reset to paginated data
+        }
+    };
+
     const handleDelete = async (id) => {
         const result = await Swal.fire({
             title: "Do you want to delete that item?",
             showCancelButton: true,
             confirmButtonText: "Yes, Delete",
-        })
+        });
 
         if (result.isConfirmed) {
             try {
                 const [result, error] = await Service.deletee(id);
                 if (result) {
                     Swal.fire("Deleted!", "", "success");
-                    fetchDataAPI(); // Refresh the list after deletion
+                    fetchDataAPI(currentPage); // Refresh the current page after deletion
                 }
                 if (error) {
-                    console.log(error);
                     Swal.fire("Error!", "Failed to delete the director", "error");
                 }
             } catch (error) {
-                console.log(error);
                 Swal.fire("Error!", "An unexpected error occurred", "error");
             }
         }
-    }
+    };
 
-    const handleChange = async (e) => {
-        console.log(e.target.value);
-        setQuery(e.target.value)
-    }
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        fetchDataAPI(page); // Fetch new data for the selected page
+    };
 
     useEffect(() => {
-        fetchDataAPI();
-    }, []);
+        fetchDataAPI(currentPage);
+    }, [currentPage]);
+
     return (
         <>
             <div className="content-header">
@@ -75,50 +99,70 @@ function ListDirector() {
                 <div className="container-fluid">
                     <div className="d-flex justify-content-between mb-3">
                         <Link to={"/director/add"} className="btn btn-primary">Add Director</Link>
-                        <form className="d-flex">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" onChange={e => handleChange(e)} />
-                            <button className="btn btn-outline-success" type="button">Search</button>
+                        <form className="d-flex" onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                            <input className="form-control me-2" type="search" placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
+                            <button className="btn btn-outline-success" type="button" onClick={handleSearch}>Search</button>
                         </form>
                     </div>
+
                     <table className="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Avatar</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Descripion</th>
+                                <th scope="col">Description</th>
                                 <th scope="col">Birthday</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                data && data.map((e, i) => {
-                                    return (
-                                        <tr key={i}>
-                                            <td>{e.id}</td>
-                                            <td style={{ width: "10%" }}>
-                                                <img className='card-img' src={e.avatar} alt={e.name} />
-                                            </td>
-                                            <td>{e.name}</td>
-                                            <td>
-                                                <div dangerouslySetInnerHTML={{ __html: e.description }} />
-                                            </td>
-                                            <td>{e.birthday}</td>
-                                            <td>
-                                                <Link to={`/director/edit/${e.id}`} className="btn btn-warning rounded-0 mr-2 btn-sm me-2">Update</Link>
-                                                <button className="btn btn-danger rounded-0 btn-sm" onClick={() => handleDelete(e.id)}>Delete</button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })
-                            }
+                            {data.map((e, i) => (
+                                <tr key={i}>
+                                    <td>{e.id}</td>
+                                    <td className='w-25'>
+                                        <img className='card-img'  src={`${API_URL}/${e.avatar}`} alt={e.name} />
+                                    </td>
+                                    <td>{e.name}</td>
+                                    <td><div dangerouslySetInnerHTML={{ __html: e.description }} /></td>
+                                    <td>{e.birthday}</td>
+                                    <td>
+                                        <Link to={`/director/edit/${e.id}`} className="btn btn-warning rounded-0 me-2 btn-sm">Update</Link>
+                                        <button className="btn btn-danger rounded-0 btn-sm" onClick={() => handleDelete(e.id)}>Delete</button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
+
+                    {/* Pagination Component */}
+                    <nav aria-label="Page navigation">
+                        <ul className="pagination">
+                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                                    Previous
+                                </button>
+                            </li>
+
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                    <button className="page-link" onClick={() => handlePageChange(index + 1)}>
+                                        {index + 1}
+                                    </button>
+                                </li>
+                            ))}
+
+                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                                    Next
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </section>
         </>
     );
 }
 
-export default ListDirector
+export default ListDirector;

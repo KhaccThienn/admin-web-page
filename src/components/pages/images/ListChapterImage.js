@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import * as ChapterImagesService from "../../../services/ChapterImagesService"
 import * as EpisodeService from "../../../services/EpisodeService"
 import Swal from 'sweetalert2'
+import { API_URL } from '../../../common/constant'
 
 function ListChapterImage() {
     const { episodeId } = useParams()
@@ -117,10 +118,10 @@ function ListChapterImage() {
                                             <td>{e.id}</td>
                                             <td>{e.name}</td>
                                             <td style={{ width: "30%" }}>
-                                                <img src={e.url} alt={e.name} className='card-img' />
+                                                <img src={`${API_URL}/${e.url}`} alt={e.name} className='card-img' />
                                             </td>
                                             <td>{e.url}</td>
-                                            <td>{e.displayOrder}</td>
+                                            {/* <td>{e.displayOrder}</td> */}
                                             <td>
                                                 <Link to={`/images/edit/${e.id}`} className="btn btn-warning rounded-0 mr-2 btn-sm me-2">Update</Link>
                                                 <button className="btn btn-danger rounded-0 btn-sm" onClick={() => handleDelete(e.id)}>Delete</button>

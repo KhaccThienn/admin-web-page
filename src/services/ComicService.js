@@ -12,6 +12,23 @@ export const getAll = async () => {
     }
 };
 
+export const search = async (query) => {
+    try {
+        const response = await axios.get(`${URLAPI}/api/Comic/search/${query}`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+export const getAllByPaginate = async (page = 1, pageSize = 2) => {
+    try {
+        const response = await axios.get(`${URLAPI}/api/Comic/by-paginate?page=${page}&pageSize=${pageSize}`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
 export const getComicGenres = async (id) => {
     try {
         const response = await axios.get(`${URLAPI}/api/Comic/Genres/${id}`);
