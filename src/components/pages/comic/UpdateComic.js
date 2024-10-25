@@ -11,6 +11,7 @@ import * as ComicService from "../../../services/ComicService";
 import * as ActorService from "../../../services/ActorService";
 import * as GenreService from "../../../services/GenreService";
 import * as DirectorService from "../../../services/DirectorService";
+import { API_URL } from '../../../common/constant';
 
 function UpdateComic() {
     const { id } = useParams();
@@ -422,13 +423,13 @@ function UpdateComic() {
                                                     {postImage ? (
                                                         <img className="card-img" alt={postImage.name} src={URL.createObjectURL(postImage)} />
                                                     ) : (
-                                                        <img className="card-img" alt="Comic Poster" src={initialValues.poster} />
+                                                        <img className="card-img" alt="Comic Poster" src={`${API_URL}/${initialValues.poster}`} />
                                                     )}
 
                                                 </div>
 
                                                 <div className="form-group">
-                                                    <label htmlFor="ListActors">Actors:</label>
+                                                    <label htmlFor="ListActors">Actors (keep it blank if you not update):</label>
                                                     <Select
                                                         isMulti
                                                         options={actors}
@@ -440,7 +441,7 @@ function UpdateComic() {
                                                 </div>
 
                                                 <div className="form-group">
-                                                    <label htmlFor="ListGenres">Genres:</label>
+                                                    <label htmlFor="ListGenres">Genres (keep it blank if you not update):</label>
                                                     <Select
                                                         isMulti
                                                         options={genres}
@@ -451,7 +452,7 @@ function UpdateComic() {
                                                 </div>
 
                                                 <div className="form-group">
-                                                    <label htmlFor="ListDirector">Directors:</label>
+                                                    <label htmlFor="ListDirector">Directors (keep it blank if you not update):</label>
                                                     <Select
                                                         isMulti
                                                         options={directors}

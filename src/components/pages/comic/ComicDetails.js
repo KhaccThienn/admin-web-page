@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import * as Service from "../../../services/ComicService"
+import { API_URL } from '../../../common/constant';
 
 function ComicDetails() {
     const { id } = useParams();
@@ -98,7 +99,7 @@ function ComicDetails() {
                     {comic ? (
                         <div className="row">
                             <div className="col-md-4">
-                                <img src={comic.poster} alt={comic.title} className="img-fluid" />
+                                <img src={`${API_URL}/${comic.poster}`} alt={comic.title} className="img-fluid" />
                             </div>
                             <div className="col-md-8">
                                 <h2>{comic.title}</h2>

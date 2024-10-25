@@ -7,6 +7,7 @@ import Editor from "@ckeditor/ckeditor5-build-classic/build/ckeditor"
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { API_URL } from '../../../common/constant';
 
 function UpdateDirector() {
     const editorConfig = {
@@ -233,7 +234,7 @@ function UpdateDirector() {
                                                         <img
                                                             className='card-img'
                                                             alt={directorData.name}
-                                                            src={directorData.avatar}
+                                                            src={`${API_URL}/${directorData.avatar}`}
                                                         />
                                                     )}
                                                 </div>

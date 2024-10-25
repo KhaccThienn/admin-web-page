@@ -1,7 +1,8 @@
+import { API_URL } from "../common/constant";
 import * as http from "../common/http-common";
 import axios from 'axios';
 
-const URLAPI = "https://localhost:7128";
+const URLAPI = API_URL;
 
 export const getGenres = async () => {
     try {

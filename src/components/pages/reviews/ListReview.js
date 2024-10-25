@@ -27,6 +27,8 @@ function ListReview() {
     const fetchAllReviews = async (comicId) => { 
         const [result, error] = await ReviewService.getAllReviewByComicID(comicId);
         if (result) {
+            console.log(result);
+            
             setReviews(result)
         }
         if (error) {
