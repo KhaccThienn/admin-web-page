@@ -1,7 +1,8 @@
+import { API_URL } from "../common/constant";
 import * as http from "../common/http-common";
 import axios from 'axios';
 
-const URLAPI = "https://localhost:7128";
+const URLAPI = API_URL;
 
 export const getGenres = async () => {
     try {
@@ -11,6 +12,25 @@ export const getGenres = async () => {
         return [null, error];
     }
 };
+
+export const search = async (query) => {
+    try {
+        const response = await axios.get(`${URLAPI}/api/Genre/search/${query}`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
+export const getGenresByPaginate = async (page = 1, pageSize = 1) => {
+    try {
+        const response = await axios.get(`${URLAPI}/api/Genre/by-paginate?page=${page}&pageSize=${pageSize}`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
 
 export const getGenreById = async (id) => {
     try {

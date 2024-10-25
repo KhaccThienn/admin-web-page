@@ -5,6 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 import * as ChapterImagesService from "../../../services/ChapterImagesService"
+import { API_URL } from '../../../common/constant';
 
 function UpdateImage() {
     const initValues = {
@@ -178,7 +179,7 @@ function UpdateImage() {
                                                         <img
                                                             className='card-img'
                                                             alt={imageData.name}
-                                                            src={imageData.url}
+                                                            src={`${API_URL}/${imageData.url}`}
                                                         />
                                                     )}
                                                 </div>

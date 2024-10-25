@@ -73,7 +73,7 @@ const AddImage = () => {
                         showConfirmButton: false,
                         timer: 1500,
                     });
-                    navigate(-1);
+                    navigate('/episode');
                 }
                 if (err) {
                     Swal.fire({
@@ -176,7 +176,7 @@ const AddImage = () => {
                                                                     />
                                                                 </div>
 
-                                                                <div className="form-group">
+                                                                {/* <div className="form-group">
                                                                     <label>Display Order:</label>
                                                                     <Field
                                                                         type="number"
@@ -188,7 +188,7 @@ const AddImage = () => {
                                                                         component="div"
                                                                         className="text-danger"
                                                                     />
-                                                                </div>
+                                                                </div> */}
 
                                                                 <button
                                                                     type="button"

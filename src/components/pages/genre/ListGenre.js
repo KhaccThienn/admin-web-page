@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import * as GenreService from "../../../services/GenreService"
+import * as GenreService from "../../../services/GenreService";
 import Swal from 'sweetalert2';
+
 function ListGenre() {
-    const [genres, setGenres] = React.useState([]);
-    const [query, setQuery] = React.useState('');
-    const fetchGenres = async () => {
+    const [genres, setGenres] = useState([]);
+    const [query, setQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const pageSize = 3; // Define your page size
+
+    const fetchGenres = async (page = 1) => {
         try {
-            const [result, error] = await GenreService.getGenres();
+            const [result, error] = await GenreService.getGenresByPaginate(page, pageSize);
             if (result) {
-                console.log(result);
-                setGenres(result.data);
+                setGenres(result.data.data); // Adjust if API sends data inside `data`
+                setTotalPages(result.data.totalPages); // Total pages from API
             }
-            if (error) {
-                console.log(error);
-            }
+            if (error) console.log(error);
         } catch (error) {
             console.log(error);
         }
@@ -25,51 +28,61 @@ function ListGenre() {
             title: "Do you want to delete that item?",
             showCancelButton: true,
             confirmButtonText: "Yes, Delete",
-        })
+        });
 
         if (result.isConfirmed) {
             try {
                 const [result, error] = await GenreService.deleteGenre(id);
                 if (result) {
                     Swal.fire("Deleted!", "", "success");
-                    fetchGenres(); // Refresh the list after deletion
+                    fetchGenres(currentPage); // Refresh current page after deletion
                 }
-                if (error) {
-                    console.log(error);
-                    Swal.fire("Error!", "Failed to delete the genre", "error");
-                }
+                if (error) Swal.fire("Error!", "Failed to delete the genre", "error");
             } catch (error) {
-                console.log(error);
                 Swal.fire("Error!", "An unexpected error occurred", "error");
             }
         }
-    }
+    };
 
-    const handleChange = async (e) => {
-        console.log(e.target.value);
-        setQuery(e.target.value)
-    }
+    const handleSearch = async () => {
+        if (query.trim() !== '') {
+            try {
+                const [result, error] = await GenreService.search(query);
+                if (result) {
+                    setGenres(result.data); // Set the search results
+                    setTotalPages(1); // Since search typically returns one page of results
+                }
+                if (error) {
+                    Swal.fire("Error!", "Failed to search actors", "error");
+                }
+            } catch (error) {
+                Swal.fire("Error!", "An unexpected error occurred", "error");
+            }
+        } else {
+            fetchGenres(currentPage); // If query is empty, reset to paginated data
+        }
+    };
 
     const handleSearchForm = async (e) => {
-        console.log(query);
-        e.preventDefault()
+        e.preventDefault();
         try {
             const [result, error] = await GenreService.getGenreByQuery(query);
-            if (result) {
-                console.log(result);
-                setGenres(result.data);
-            }
-            if (error) {
-                console.log(error);
-            }
+            if (result) setGenres(result.data);
+            if (error) console.log(error);
         } catch (error) {
             console.log(error);
         }
-    }
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        fetchGenres(page); // Fetch new data for the selected page
+    };
 
     useEffect(() => {
         fetchGenres();
     }, []);
+
     return (
         <>
             <div className="content-header">
@@ -93,10 +106,22 @@ function ListGenre() {
                     <div className="d-flex justify-content-between mb-3">
                         <Link to={"/genre/add"} className="btn btn-primary">Add Genre</Link>
                         <form className="d-flex">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" onChange={e => handleChange(e)} />
-                            <button className="btn btn-outline-success" type="button" onClick={e => handleSearchForm(e)}>Search</button>
+                            <input
+                                className="form-control me-2"
+                                type="search"
+                                placeholder="Search"
+                                onChange={(e) => setQuery(e.target.value)}
+                            />
+                            <button
+                                className="btn btn-outline-success"
+                                type="button"
+                                onClick={handleSearchForm}
+                            >
+                                Search
+                            </button>
                         </form>
                     </div>
+
                     <table className="table table-striped">
                         <thead>
                             <tr>
@@ -107,27 +132,72 @@ function ListGenre() {
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                genres && genres.map((e, i) => {
-                                    return (
-                                        <tr key={i}>
-                                            <td>{e.id}</td>
-                                            <td>{e.name}</td>
-                                            <td>{e.slug}</td>
-                                            <td>
-                                                <Link to={`/genre/edit/${e.id}`} className="btn btn-warning rounded-0 mr-2 btn-sm me-2">Update</Link>
-                                                <button className="btn btn-danger rounded-0 btn-sm" onClick={() => handleDelete(e.id)}>Delete</button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })
-                            }
+                            {genres.map((genre, index) => (
+                                <tr key={index}>
+                                    <td>{genre.id}</td>
+                                    <td>{genre.name}</td>
+                                    <td>{genre.slug}</td>
+                                    <td>
+                                        <Link
+                                            to={`/genre/edit/${genre.id}`}
+                                            className="btn btn-warning rounded-0 btn-sm me-2"
+                                        >
+                                            Update
+                                        </Link>
+                                        <button
+                                            className="btn btn-danger rounded-0 btn-sm"
+                                            onClick={() => handleDelete(genre.id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
+
+                    {/* Pagination Component */}
+                    <nav aria-label="Page navigation">
+                        <ul className="pagination">
+                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                <button
+                                    className="page-link"
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    Previous
+                                </button>
+                            </li>
+
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <li
+                                    key={index}
+                                    className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                                >
+                                    <button
+                                        className="page-link"
+                                        onClick={() => handlePageChange(index + 1)}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                </li>
+                            ))}
+
+                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                <button
+                                    className="page-link"
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Next
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </section>
         </>
     );
 }
 
-export default ListGenre
+export default ListGenre;

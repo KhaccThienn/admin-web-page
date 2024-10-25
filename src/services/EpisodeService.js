@@ -1,10 +1,20 @@
+import { API_URL } from "../common/constant";
 import * as http from "../common/http-common";
 
-const URLAPI = "https://localhost:7128";
+const URLAPI = API_URL;
 
 export const getAllComic = async () => {
     try {
         const response = await http.get(`${URLAPI}/api/Episode/get-all-comic`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
+export const search = async (query) => {
+    try {
+        const response = await http.get(`${URLAPI}/api/Comic/search/${query}`);
         return [response, null];
     } catch (error) {
         return [null, error];

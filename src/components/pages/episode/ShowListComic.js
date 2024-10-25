@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as Service from "../../../services/EpisodeService"
+import { API_URL } from '../../../common/constant';
 
 function ShowListComic() {
     const [comics, setComics] = useState([]);
@@ -46,10 +47,6 @@ function ShowListComic() {
             <section className="content">
                     <div className="d-flex justify-content-between mb-3">
                         <Link to={"/comic/add"} className="btn btn-primary">Add Comic</Link>
-                        <form className="d-flex">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="button">Search</button>
-                        </form>
                     </div>
 
                     <div className="container-fluid">
@@ -62,7 +59,7 @@ function ShowListComic() {
                                                 <div className="row align-items-center">
                                                     <div className="col-md-1 col-1">
                                                         <Link to={`/episode/list/${e.comic?.id}`}>
-                                                            <img src={e.comic.poster} style={{ width: "90px" }} className="rounded-3" alt="" />
+                                                            <img src={`${API_URL}/${e.comic.poster}`} style={{ width: "90px" }} className="rounded-3" alt="" />
                                                         </Link>
                                                     </div>
                                                     <div className="col-md-10 col-10 pl-3">

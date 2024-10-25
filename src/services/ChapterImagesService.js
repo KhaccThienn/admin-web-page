@@ -1,6 +1,7 @@
+import { API_URL } from "../common/constant";
 import * as http from "../common/http-common";
 
-const URLAPI = "https://localhost:7128";
+const URLAPI = API_URL;
 
 export const getAll = async () => {
     try {

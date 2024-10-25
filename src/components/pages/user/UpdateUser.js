@@ -5,6 +5,7 @@ import * as UserService from "../../../services/UserService"
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { API_URL } from '../../../common/constant';
 
 function UpdateUser() {
     const { id } = useParams();
@@ -19,6 +20,7 @@ function UpdateUser() {
                 setUser(result.data);
                 // If you have an image URL, set it here
                 if (result.data.avatar) {
+                    result.data.avatar = `${API_URL}/${result.data.avatar}`;
                     setPostImage(result.data.avatar);
                 }
             }
@@ -148,7 +150,7 @@ function UpdateUser() {
                                                     />
                                                     <ErrorMessage name="imageFile" component="div" className="text-danger" />
                                                     {postImage && (
-                                                        <img src={postImage} alt="Preview" className="mt-2" style={{ maxWidth: '200px' }} />
+                                                        <img src={postImage} alt={values.name} className="mt-2" style={{ maxWidth: '200px' }} />
                                                     )}
                                                 </div>
 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import * as Service from "../../../services/UserService"
 import Swal from 'sweetalert2';
+import { API_URL } from '../../../common/constant';
 function ListUser() {
     const [data, setData] = React.useState([]);
     const [query, setQuery] = React.useState('');
@@ -98,7 +99,7 @@ function ListUser() {
                                         <tr key={i}>
                                             <td>{e.id}</td>
                                             <td className='w-25'>
-                                                <img className='card-img' src={e.avatar} alt={e.name} />
+                                                <img className='card-img' src={`${API_URL}/${e.avatar}`} alt={e.name} />
                                             </td>
                                             <td>{e.name}</td>
                                             <td>{e.email}</td>

@@ -1,11 +1,30 @@
+import { API_URL } from "../common/constant";
 import * as http from "../common/http-common";
 import axios from 'axios';
 
-const URLAPI = "https://localhost:7128";
+const URLAPI = API_URL;
 
 export const getAll = async () => {
     try {
         const response = await axios.get(`${URLAPI}/api/Director`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
+export const search = async (query) => {
+    try {
+        const response = await axios.get(`${URLAPI}/api/Director/search/${query}`);
+        return [response, null];
+    } catch (error) {
+        return [null, error];
+    }
+};
+
+export const getAllByPaginate = async (page = 1, pageSize = 2) => {
+    try {
+        const response = await axios.get(`${URLAPI}/api/Director/by-paginate?page=${page}&pageSize=${pageSize}`);
         return [response, null];
     } catch (error) {
         return [null, error];
