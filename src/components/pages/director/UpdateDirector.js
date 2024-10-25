@@ -109,6 +109,7 @@ function UpdateDirector() {
 
     const handleSubmit = async (values, { setSubmitting }) => {
         console.log("Form submitted with values:", values);
+        
         const formData = new FormData();
         formData.append("id", id);
         formData.append("name", values.name ? values.name : directorData.name);
